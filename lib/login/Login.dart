@@ -22,8 +22,6 @@ class _LoginState extends State<Login> {
         _firebaseUser = await _firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password);
         print("${_firebaseUser.uid} is user id");
-        skey.currentState
-            .showSnackBar(SnackBar(content: Text('Logged In')));
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
           return HomePage();
@@ -36,13 +34,25 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Future<FirebaseUser> getUser() async{
+    return await _firebaseAuth.currentUser();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser().then((_firebaseUser){
+      if(_firebaseUser!=null){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+          return HomePage();
+        }));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_firebaseUser != null) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return HomePage();
-      }));
-    }
     // TODO: implement build
     return Scaffold(
       key: skey,

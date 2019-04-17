@@ -2,22 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whatsapp/homePage.dart';
 
+// ignore: must_be_immutable
 class signUp extends StatelessWidget {
   String _email, _password;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseUser _firebaseUser;
-  var fkey = GlobalKey<FormState>();
+  static GlobalKey<FormState> fkey = GlobalKey<FormState>();
+  final skey = GlobalKey<ScaffoldState>();
 
   check(String email, String password, BuildContext context) async {
-    try {
-      _firebaseUser = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      print("${_firebaseUser.uid}");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return HomePage();
-      }));
-    } catch (e) {
-      print(e.message);
+    if (fkey.currentState.validate()) {
+      fkey.currentState.save();
+      try {
+        _firebaseUser = await _firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        print("${_firebaseUser.uid}");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return HomePage();
+        }));
+      } catch (e) {
+        print(e.message);
+      }
     }
   }
 
@@ -25,6 +31,7 @@ class signUp extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      key: skey,
       appBar: AppBar(
         title: Text("Sign Up"),
       ),
