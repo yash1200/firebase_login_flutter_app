@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp/login/Login.dart';
 import 'package:whatsapp/pages/calls.dart';
 import 'package:whatsapp/pages/camera.dart';
 import 'package:whatsapp/pages/chats.dart';
 import 'package:whatsapp/pages/status.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,6 +26,9 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: listView(),
+      ),
       appBar: AppBar(
         title: Text("WhatsApp"),
         elevation: 1,
@@ -50,10 +55,6 @@ class _HomePageState extends State<HomePage>
             padding: const EdgeInsets.only(right: 18),
             child: Icon(Icons.search),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 14),
-            child: Icon(Icons.more_vert),
-          )
         ],
       ),
       body: TabBarView(
@@ -74,6 +75,41 @@ class _HomePageState extends State<HomePage>
           onPressed: () {
             print("FAB clicked");
           }),
+    );
+  }
+
+  Widget listView() {
+    return Column(
+      children: <Widget>[
+        UserAccountsDrawerHeader(
+          accountName: Text("Yash Johri"),
+          accountEmail: Text("yashjohri1200@gmail.com"),
+        ),
+        ListTile(
+          title: Text("Sign Out"),
+          leading: Icon(
+            Icons.transit_enterexit,
+            color: Colors.black,
+          ),
+          onTap: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context){
+                  return Login();
+            }));
+          },
+        ),
+        ListTile(
+          title: Text("Exit"),
+          leading: Icon(
+            Icons.exit_to_app,
+            color: Colors.black,
+          ),
+          onTap: () {
+            exit(0);
+          },
+        )
+      ],
     );
   }
 }

@@ -24,8 +24,8 @@ class _LoginState extends State<Login> {
         print("${_firebaseUser.uid} is user id");
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return HomePage();
-        }));
+              return HomePage();
+            }));
       } catch (e) {
         print(e.message);
         skey.currentState
